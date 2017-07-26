@@ -4,7 +4,15 @@ import android.support.annotation.NonNull;
 
 import java.math.BigInteger;
 
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.observables.MathObservable;
+
 import rx.Observable;
+import rx.Observer;
+import rx.schedulers.Schedulers;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 /**
  * @author Artur Vasilov
@@ -24,7 +32,27 @@ public class RxJavaTask6 {
      */
     @NonNull
     public static Observable<BigInteger> task6Observable() {
-        return Observable.just(BigInteger.ONE);
+        Observable temp = Observable.range(1, 100000);
+        return temp.map(s -> new BigInteger(s.toString()));
+    }
+
+    public static void main(String[] args) {
+//        task6Observable().subscribe(s -> {
+//            s = s.multiply(BigInteger.valueOf(Long.valueOf("2")));
+//            System.out.println(s);
+//        });
+
+//        task6Observable()
+//                .skip(39999)
+//                .skipLast(40001)
+//                .subscribe(System.out::println);
+
+        task6Observable().filter(s ->
+                !(s.divideAndRemainder(new BigInteger("3")))[1].equals(
+                        new BigInteger("0"))
+        ).subscribe(System.out::println);
+
+
     }
 
 }
